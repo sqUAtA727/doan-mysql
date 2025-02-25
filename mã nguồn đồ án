@@ -296,3 +296,11 @@ insert into phim_the_loai (ma_phim, ma_the_loai) values
 (7,1),
 (7,2),
 (7,6);
+
+-- Các câu lệch select
+select count(*) from phim join phim_the_loai
+on phim.id = phim_the_loai.ma_phim
+join the_loai
+on the_loai.id = phim_the_loai.ma_the_loai
+where the_loai.ten = 'Chính kịch'
+group by the_loai.id;
