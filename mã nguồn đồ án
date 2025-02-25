@@ -1,0 +1,298 @@
+-- Tạo database quản lý dịch vụ phim
+create database QuanLyDichVuPhim;
+use QuanLyDichVuPhim;
+
+-- Tạo các bảng
+
+create table phim(
+	id int primary key auto_increment,
+    ten varchar(100),
+    nam_san_xuat year,
+    mo_ta varchar(500)
+);
+
+create table the_loai(
+	id int primary key auto_increment,
+    ten varchar(50)
+);
+
+create table dao_dien(
+	id int primary key auto_increment,
+    ten varchar(100)
+);
+
+create table dien_vien(
+	id int primary key auto_increment,
+    ten varchar(100)
+);
+
+create table nha_soan_nhac(
+	id int primary key auto_increment,
+    ten varchar(100)
+);
+
+create table long_tieng(
+	id int primary key auto_increment,
+    ten varchar(100)
+);
+
+create table dich_thuat(
+	id int primary key auto_increment,
+    ten varchar(100)
+);
+
+create table phim_the_loai (
+	ma_phim int,
+    foreign key (ma_phim) references phim(id),
+    ma_the_loai int,
+    foreign key (ma_the_loai) references the_loai(id)
+);
+
+create table phim_dao_dien (
+	ma_phim int primary key,
+    foreign key (ma_phim) references phim(id),
+    ma_dao_dien int,
+    foreign key (ma_dao_dien) references dao_dien(id)
+);
+
+create table phim_dien_vien (
+	ma_phim int,
+    foreign key (ma_phim) references phim(id),
+	ma_dien_vien int,
+    foreign key (ma_dien_vien) references dien_vien(id)
+);
+
+create table phim_dich_thuat (
+	ma_phim int primary key,
+    foreign key (ma_phim) references phim(id),
+	ma_dich_thuat int,
+    foreign key (ma_dich_thuat) references dich_thuat(id)
+);
+
+create table phim_long_tieng (
+	ma_phim int,
+    foreign key (ma_phim) references phim(id),
+	ma_long_tieng int,
+    foreign key (ma_long_tieng) references long_tieng(id)
+);
+
+create table phim_nha_soan_nhac (
+	ma_phim int,
+    foreign key (ma_phim) references phim(id),
+	ma_nha_soan_nhac int,
+    foreign key (ma_nha_soan_nhac) references nha_soan_nhac(id)
+);
+
+create table tai_khoan(
+	id int primary key auto_increment,
+    ten varchar(100),
+    email varchar(300),
+    sdt bigint
+);
+
+create table dang_ky_dich_vu(
+	id int primary key auto_increment,
+    ma_tai_khoan int,
+    foreign key (ma_tai_khoan) references tai_khoan(id),
+    ma_dich_vu int,
+    foreign key (ma_dich_vu) references goi_dich_vu(id),
+    tinh_trang varchar(100),
+    ngay_thanh_toan date
+);
+
+create table nguoi_dung(
+	id int primary key auto_increment,
+    ten varchar(100),
+    ma_tai_khoan int,
+    foreign key (ma_tai_khoan) references tai_khoan(id)
+);
+
+create table goi_dich_vu(
+	id int primary key auto_increment,
+    ten varchar(100),
+    gia decimal(10,2),
+    dac_quyen varchar(500)
+);
+
+-- Insert thông tin vào bảng
+insert into goi_dich_vu (ten, gia, dac_quyen) values
+('Gói cơ bản', 20000, '480p, 1 người dùng'),
+('Gói nâng cao', 50000, '720p, 2 người dùng'),
+('Gói cao cấp', 70000, '1080p, 3 người dùng'),
+('Gói cao cấp pro max', 100000, '2K, 5 người dùng'),
+('Gói premium', 200000, '4K, 7 người dùng'),
+('Traok miền tínk', 1000000, 'Muất tuài lộk');
+
+insert into tai_khoan (ten, email, sdt) values
+('Nguyễn Văn A', 'nguyenvana@email.com', 098172727),
+('Nguyễn Văn B', 'nguyenvanb@email.com', 727727727),
+('Nguyễn Văn C', 'nguyenvanc@email.com', 727147061),
+('Nguyễn Văn D', 'nguyenvand@email.com', 482759275),
+('Nguyễn Văn E', 'nguyenvane@email.com', 027562968),
+('Nguyễn Văn F', 'nguyenvanf@email.com', 301740371),
+('Nạn nhân tô mèo', 'bé là nạn nhân', 295728507);
+
+insert into nguoi_dung (ten, ma_tai_khoan) values
+('Người dùng đánh số 1', 1),
+('Người dùng đánh số 2', 2),
+('Người dùng đánh số 3', 2),
+('Người dùng đánh số 4', 3),
+('Người dùng đánh số 5', 3),
+('Người dùng đánh số 6', 3),
+('Người dùng đánh số 7', 4),
+('Người dùng đánh số 8', 4),
+('Người dùng đánh số 9', 4),
+('Người dùng đánh số 10', 5),
+('Người dùng đánh số 11', 5),
+('Người dùng đánh số 12', 5);
+
+insert into dang_ky_dich_vu (ma_tai_khoan, ma_dich_vu, tinh_trang, ngay_thanh_toan) values
+(1, 1, 'Đã thanh toán', '2006-03-29'),
+(2, 2, 'Đã thanh toán', '2020-03-29'),
+(3, 3, 'Đã thanh toán', '2021-04-30'),
+(4, 4, 'Đã thanh toán', '2025-01-01'),
+(4, 4, 'Đã thanh toán', '2025-02-01'),
+(5, 5, 'Đã thanh toán', '2024-07-27'),
+(6, 5, 'Chưa thanh toán', '1727-07-27'),
+(7, 6, 'Đã thanh toán', '2727-07-27');
+
+insert into phim (ten, nam_san_xuat, mo_ta) values
+('The Shawshank Redemption', 1994, 'Anh ấy đã được tẩy trắng'),
+('Interstellar', 2014, 'Ta cần di cư!!'),
+('Oppenheimer', 2023, 'Boom boom'),
+('Breaking Bad', 2008, 'Thầy bạch và Jesse Hông Người'),
+('Game of Thrones', 2011, 'Đúng trò chơi thẳng xuống đáy'),
+('Attack on Titan', 2013, 'Sọ dừa đi hủy diệt thế giới'),
+('Frieren', 2023, 'Cà chua và cà tím');
+
+insert into dao_dien (ten) values
+('Frank Darabont'),
+('Christopher Nolan'),
+('Vince Gilligan'),
+('David Benioff'),
+('Yuichiro Hayashi'),
+('Keiichiro Saito');
+
+insert into dich_thuat (ten) values
+('Người dịch 1'),
+('Người dịch 2'),
+('Người dịch 3');
+
+insert into dien_vien (ten) values
+('Tim Robbins'),
+('Morgan Freeman'),
+('Anne Hathaway'),
+('Jessica Chastain'),
+('Cillian Murphy'),
+('Matt Damon'),
+('Bryan Cranston'),
+('Aaron Paul'),
+('Kit Harington'),
+('Peter Dinklage'),
+('Yuuki Kaji'),
+('Takehito Koyasu'),
+('Atsumi Tanezaki'),
+('Kana Ichinose');
+
+insert into long_tieng (ten) values
+('Tiếng Anh'),
+('Tiếng Nhật'),
+('Tiếng Trung'),
+('Tiếng Hàn'),
+('Tiếng Việt');
+
+insert into nha_soan_nhac (ten) values
+('Thomas Newman'),
+('Hans Zimmer'),
+('Ludwig Göransson'),
+('Dave Porter'),
+('Ramin Djawadi'),
+('Hiroyuki Sawano'),
+('KOHTA YAMAMOTO'),
+('Evan Call');
+
+insert into the_loai (ten) values
+('Chính kịch'),
+('Phiêu lưu'),
+('Khoa học viễn tưởng'),
+('Lịch sử'),
+('Hành động'),
+('Viễn tưởng'),
+('Sinh tồn');
+
+insert into phim_dao_dien (ma_phim, ma_dao_dien) values
+(1, 1),
+(2, 2),
+(3, 2),
+(4, 3),
+(5, 4),
+(6, 5),
+(7, 6);
+
+insert into phim_dich_thuat (ma_phim, ma_dich_thuat) values
+(1, 1),
+(2, 2),
+(3, 3),
+(4, 1),
+(5, 2),
+(6, 3),
+(7, 2);
+
+insert into phim_dien_vien (ma_phim, ma_dien_vien) values
+(1, 1),
+(1, 2),
+(2, 3),
+(2, 4),
+(3, 5),
+(3, 6),
+(4, 7),
+(4, 8),
+(5, 9),
+(5, 10),
+(6, 11),
+(6, 12),
+(7, 13),
+(7, 14);
+
+select * from long_tieng;
+
+insert into phim_long_tieng (ma_phim, ma_long_tieng) values
+(1, 1),
+(2, 1),
+(3, 1),
+(4, 1),
+(4, 2),
+(5, 1),
+(6, 1),
+(6, 2),
+(7, 1),
+(7, 2);
+
+insert into phim_nha_soan_nhac (ma_phim, ma_nha_soan_nhac) values
+(1,1),
+(2,2),
+(3,3),
+(4,4),
+(5,5),
+(6,6),
+(6,7),
+(7,8);
+
+insert into phim_the_loai (ma_phim, ma_the_loai) values
+(1,1),
+(2,1),
+(2,2),
+(2,2),
+(3,1),
+(3,4),
+(4,1),
+(5,1),
+(5,2),
+(5,6),
+(6,1),
+(6,5),
+(6,6),
+(6,7),
+(7,1),
+(7,2),
+(7,6);
