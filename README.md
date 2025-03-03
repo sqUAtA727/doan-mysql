@@ -1,5 +1,6 @@
 Đồ án Quản lý dịch vụ xem phim
-Dồ án này là 1 cơ sở dữ liệu của 1 dịch vụ xem phim theo tháng tương tự như Netflix từ đó chúng ta sẽ có các bảng
+
+Đồ án này là 1 cơ sở dữ liệu của 1 dịch vụ xem phim theo tháng tương tự như Netflix từ đó chúng ta sẽ có các bảng
 
 User:
   + Tài khoản
