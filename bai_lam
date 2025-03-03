@@ -31,13 +31,13 @@ create function timPhimBangTheLoai (theLoai varchar(100))
 	begin
 		declare soPhim int;
 		select count(ma_phim) into soPhim from phim_the_loai join the_loai
-        on phim_the_loai.ma_the_loai = the_loai.id
-        where the_loai.ten = theLoai;
+        	on phim_the_loai.ma_the_loai = the_loai.id
+        	where the_loai.ten = theLoai;
         if (soPhim = 0) then
 		signal sqlstate '45000'
-            set message_text = 'Không có thể loại bạn cần';
-		else 
-			return soPhim;
+                set message_text = 'Không có thể loại bạn cần';
+	else 
+	return soPhim;
         end if;
 	end $$
 delimiter ;
@@ -52,10 +52,17 @@ on goi_dich_vu.id = dang_ky_dich_vu.ma_dich_vu;
 delimiter $$
 create procedure laySoLuongLongTiengBangTen (tenPhim varchar(100))
 	begin
-		select count(phim_long_tieng.ma_long_tieng) from phim join phim_long_tieng
-        on phim.id = phim_long_tieng.ma_phim
-        where phim.ten = tenPhim;
+		declare kiemTraTenPhim varchar(100);
+        	select ten into kiemTraTenPhim from phim
+        	where ten = tenPhim;
+        	if (kiemTraTenPhim is null) then
+			select 'Không có phim bạn cần tìm' as message;
+		else
+			select count(phim_long_tieng.ma_long_tieng) from phim join phim_long_tieng
+			on phim.id = phim_long_tieng.ma_phim
+			where phim.ten = tenPhim;
+        	end if;
 	end $$
 delimiter ;
 
-call laySoLuongLongTiengBangTen('Frieren');
+call laySoLuongLongTiengBangTen('L');
