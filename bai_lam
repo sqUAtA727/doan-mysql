@@ -1,0 +1,61 @@
+-- 1. lấy phim mà có nhiều đạo diễn nhất lấy ra tên phim và tên đạo diễn
+-- 2. đếm tất cả các diễn viên ở trong phim
+-- 3. viết function để tìm ra được số lượng các phim dựa trên thể loại mà mình muốn
+-- 4. lấy ra tất cả các tên gói dịch vụ và tình trạng
+-- 5. viết store procedure lấy ra được số lượng lồng tiếng của phim được truyền vào
+
+-- 1
+create view view_soLuongDaoDien as
+select phim.ten as ten_phim, dao_dien.ten as ten_dao_dien, count(ma_dao_dien) as so_dao_dien from phim join phim_dao_dien
+on phim.id = phim_dao_dien.ma_phim
+join dao_dien
+on dao_dien.id = phim_dao_dien.ma_dao_dien
+group by phim.id;
+
+select phim.ten, dao_dien.ten, count(ma_dao_dien) as so_dao_dien from phim join phim_dao_dien
+on phim.id = phim_dao_dien.ma_phim
+join dao_dien
+on dao_dien.id = phim_dao_dien.ma_dao_dien
+group by phim.id
+having so_dao_dien = (select max(so_dao_dien) from view_soLuongDaoDien);
+
+-- 2
+select phim.ten, count(ma_dien_vien) from phim join phim_dien_vien
+on phim.id = phim_dien_vien.ma_phim
+group by phim.id;
+
+-- 3
+delimiter $$
+create function timPhimBangTheLoai (theLoai varchar(100))
+	returns int deterministic
+	begin
+		declare soPhim int;
+		select count(ma_phim) into soPhim from phim_the_loai join the_loai
+        on phim_the_loai.ma_the_loai = the_loai.id
+        where the_loai.ten = theLoai;
+        if (soPhim is null) then
+			signal sqlstate '45000'
+            set message_text = 'Không có thể loại bạn cần';
+		else 
+			return soPhim;
+        end if;
+	end $$
+delimiter ;
+
+select timPhimBangTheLoai('Phiêu lưu');
+
+-- 4
+select goi_dich_vu.ten, tinh_trang from goi_dich_vu join dang_ky_dich_vu
+on goi_dich_vu.id = dang_ky_dich_vu.ma_dich_vu;
+
+-- 5
+delimiter $$
+create procedure laySoLuongLongTiengBangTen (tenPhim varchar(100))
+	begin
+		select count(phim_long_tieng.ma_long_tieng) from phim join phim_long_tieng
+        on phim.id = phim_long_tieng.ma_phim
+        where phim.ten = tenPhim;
+	end $$
+delimiter ;
+
+call laySoLuongLongTiengBangTen('Frieren');
