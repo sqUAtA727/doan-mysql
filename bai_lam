@@ -33,8 +33,8 @@ create function timPhimBangTheLoai (theLoai varchar(100))
 		select count(ma_phim) into soPhim from phim_the_loai join the_loai
         on phim_the_loai.ma_the_loai = the_loai.id
         where the_loai.ten = theLoai;
-        if (soPhim is null) then
-			signal sqlstate '45000'
+        if (soPhim = 0) then
+		signal sqlstate '45000'
             set message_text = 'Không có thể loại bạn cần';
 		else 
 			return soPhim;
